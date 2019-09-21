@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
+import { Map, Marker, GoogleApiWrapper } from "google-maps-react";
 import Axios from "axios";
 import { Locations } from "./Locations";
 
@@ -59,6 +59,29 @@ export class MapContainer extends Component {
       alert("invalid address");
     }
   };
+  deleteLocation = locationID => {
+    if (!!locationID) {
+      Axios.delete("http://localhost:5000/api/v1/delete/" + locationID)
+        .then(response => {
+          let result = response.data;
+          if (result.success === "true") {
+            this.setState({
+              loading: true,
+              locations: result.locations
+            });
+          }
+        })
+        .catch(error => {
+          // handle error
+          this.setState({
+            loading: true,
+            error
+          });
+        });
+    } else {
+      alert("invalid address");
+    }
+  };
   // if (!props.loaded) return <div>Loading...</div>;
   render() {
     const { error, loading, locations, mapSettings } = this.state;
@@ -82,7 +105,11 @@ export class MapContainer extends Component {
                 );
               })}
           </Map>
-          <Locations locations={locations} addLocation={this.addLocation} />
+          <Locations
+            locations={locations}
+            addLocation={this.addLocation}
+            deleteLocation={this.deleteLocation}
+          />
         </div>
       );
     }

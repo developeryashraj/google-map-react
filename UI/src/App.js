@@ -1,7 +1,7 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import MapContainer from './components/MapContainer';
+import React from "react";
+// import logo from './logo.svg';
+import "./App.css";
+import MapContainer from "./components/MapContainer";
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
           Learn React
         </a>
       </header> */}
-      <MapContainer/>
+      <MapContainer />
     </div>
   );
 }

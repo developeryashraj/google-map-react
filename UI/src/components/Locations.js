@@ -19,6 +19,9 @@ export class Locations extends Component {
       address: e.target.value
     });
   };
+  handleDelete = e => {
+    this.props.deleteLocation(e.target.id);
+  };
   render() {
     const { locations } = this.props;
     var divStyle = {
@@ -34,7 +37,14 @@ export class Locations extends Component {
         <ul>
           {locations &&
             locations.map(location => {
-              return <li key={location.id}>{location.name}</li>;
+              return (
+                <li key={location.id}>
+                  {location.name}{" "}
+                  <button onClick={this.handleDelete} id={location.id}>
+                    Delete
+                  </button>
+                </li>
+              );
             })}
         </ul>
       </div>

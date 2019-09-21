@@ -34,6 +34,7 @@ app.use(function(req, res, next) {
   // res.setHeader("Access-Control-Allow-Credentials", true);
   next();
 });
+
 // get all locations
 app.get("/api/v1/locations", (req, res) => {
   res.status(200).send({
@@ -45,7 +46,6 @@ app.get("/api/v1/locations", (req, res) => {
 });
 
 app.post("/api/v1/add", (req, res) => {
-  console.log(req.body);
   if (!req.body.title) {
     return res.status(400).send({
       success: "false",
@@ -80,24 +80,29 @@ app.post("/api/v1/add", (req, res) => {
   }
 });
 
-app.delete("/api/v1/deleteLocation/:id", (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
+app.delete("/api/v1/delete/:id", (req, res) => {
   const id = parseInt(req.params.id, 10);
 
+  let isRemoved = false;
   db.locations.map((location, index) => {
     if (location.id === id) {
       db.locations.splice(index, 1);
-      return res.status(200).send({
-        success: "true",
-        message: "Location deleted successfuly"
-      });
+      isRemoved = true;
     }
   });
 
-  return res.status(404).send({
-    success: "false",
-    message: "Location not found"
-  });
+  if (isRemoved) {
+    return res.status(200).send({
+      success: "true",
+      message: "Location deleted successfuly",
+      locations: db.locations
+    });
+  } else {
+    return res.status(404).send({
+      success: "false",
+      message: "Location not found"
+    });
+  }
 });
 
 // app.get("/test", (req, res) => {
