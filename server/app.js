@@ -47,7 +47,7 @@ app.get("/api/v1/locations", (req, res) => {
 
 app.post("/api/v1/add", (req, res) => {
   if (!req.body.title) {
-    return res.status(400).send({
+    return res.status(200).send({
       success: "false",
       message: "Address / Place name is required"
     });
@@ -74,7 +74,7 @@ app.post("/api/v1/add", (req, res) => {
           locations: db.locations
         });
       } else {
-        return res.status(404).send({
+        return res.status(200).send({
           success: "false",
           message: "Location not found"
         });
@@ -92,12 +92,12 @@ app.post("/api/v1/add", (req, res) => {
       locations: db.locations
     });
   } else if (resSample.status === "ZERO_RESULTS") {
-    return res.status(400).send({
+    return res.status(200).send({
       success: "false",
       message: "No result found. Please enter Germany address only."
     });
   } else {
-    return res.status(400).send({
+    return res.status(200).send({
       success: "false",
       message: "Invalid Request"
     });
@@ -122,7 +122,7 @@ app.delete("/api/v1/delete/:id", (req, res) => {
       locations: db.locations
     });
   } else {
-    return res.status(404).send({
+    return res.status(200).send({
       success: "false",
       message: "Location not found"
     });

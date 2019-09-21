@@ -11,6 +11,7 @@ export class MapContainer extends Component {
     super(props);
     this.state = {
       error: null,
+      apiMessage: null,
       loading: false,
       locations: [],
       mapSettings: {}
@@ -47,6 +48,11 @@ export class MapContainer extends Component {
               loading: true,
               locations: result.locations
             });
+          } else {
+            this.setState({
+              loading: true,
+              apiMessage: result.message || null
+            });
           }
         })
         .catch(error => {
@@ -57,7 +63,12 @@ export class MapContainer extends Component {
           });
         });
     } else {
-      alert("invalid address");
+      let errorMsg = {
+        message: "invalid address"
+      };
+      this.setState({
+        error: errorMsg
+      });
     }
   };
   deleteLocation = locationID => {
@@ -69,6 +80,11 @@ export class MapContainer extends Component {
             this.setState({
               loading: true,
               locations: result.locations
+            });
+          } else {
+            this.setState({
+              loading: true,
+              apiMessage: result.message || null
             });
           }
         })
@@ -85,14 +101,17 @@ export class MapContainer extends Component {
   };
   // if (!props.loaded) return <div>Loading...</div>;
   render() {
-    const { error, loading, locations, mapSettings } = this.state;
-    if (error) {
-      return <div>Error: {error.message}</div>;
-    } else if (!loading) {
+    const { error, loading, locations, mapSettings, apiMessage } = this.state;
+    let errorStyle = {
+      color: "red"
+    };
+    if (!loading) {
       return <div>Loading</div>;
     } else {
       return (
         <div>
+          {error && <div style={errorStyle}>Error: {error.message}</div>}
+          {apiMessage && <div style={errorStyle}>Message: {apiMessage}</div>}
           <Map google={this.props.google} className="map" {...mapSettings}>
             {locations &&
               locations.map(location => {

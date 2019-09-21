@@ -14,16 +14,12 @@ export class Locations extends Component {
     this.setState(this.initialState);
   };
   addLocation = () => {
-    if (!!this.state.address) {
-      if (this.state.id !== "") {
-        this.props.addLocation(this.state.address, this.state.id);
-      } else {
-        this.props.addLocation(this.state.address);
-      }
-      this.resetData();
+    if (this.state.id !== "") {
+      this.props.addLocation(this.state.address, this.state.id);
     } else {
-      alert("enter valid address");
+      this.props.addLocation(this.state.address);
     }
+    this.resetData();
   };
   handleChange = e => {
     this.setState({
