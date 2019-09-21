@@ -56,6 +56,30 @@ app.post("/api/v1/add", (req, res) => {
 
   let resSample = db.sampleResponse;
   if (resSample.status === "OK") {
+    const id = parseInt(req.body.id, 10);
+    if (req.body.id !== "") {
+      let isUpdated = false;
+      db.locations.map((location, index) => {
+        if (location.id === id) {
+          db.locations[index].name = req.body.title;
+          db.locations[index].position = resSample.results[0].geometry.location;
+          isUpdated = true;
+        }
+      });
+
+      if (isUpdated) {
+        return res.status(200).send({
+          success: "true",
+          message: "Location updated successfuly",
+          locations: db.locations
+        });
+      } else {
+        return res.status(404).send({
+          success: "false",
+          message: "Location not found"
+        });
+      }
+    }
     const location = {
       id: db.locations.length + 1,
       name: req.body.title,

@@ -34,10 +34,11 @@ export class MapContainer extends Component {
         });
       });
   }
-  addLocation = address => {
+  addLocation = (address = "", id = "") => {
     if (!!address) {
       Axios.post("http://localhost:5000/api/v1/add", {
-        title: address
+        title: address,
+        id: id
       })
         .then(response => {
           let result = response.data;
