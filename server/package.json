@@ -9,6 +9,7 @@
   "author": "Yashwant Singh Zala",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "urlencode": "^1.1.0"
   }
 }

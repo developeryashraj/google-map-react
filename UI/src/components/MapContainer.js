@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import Axios from "axios";
+import { Locations } from "./Locations";
 
 // import Marker from '../../src/components/Marker';
 // import Map from '../M?ap';
@@ -16,7 +17,7 @@ export class MapContainer extends Component {
     };
   }
   componentDidMount() {
-    Axios("http://localhost:5000/api/v1/locations")
+    Axios.get("http://localhost:5000/api/v1/locations")
       .then(response => {
         let result = response.data;
         this.setState({
@@ -25,7 +26,7 @@ export class MapContainer extends Component {
           mapSettings: result.initialMapSettings
         });
       })
-      .catch(function(error) {
+      .catch(error => {
         // handle error
         this.setState({
           loading: true,
@@ -33,6 +34,31 @@ export class MapContainer extends Component {
         });
       });
   }
+  addLocation = address => {
+    if (!!address) {
+      Axios.post("http://localhost:5000/api/v1/add", {
+        title: address
+      })
+        .then(response => {
+          let result = response.data;
+          if (result.success === "true") {
+            this.setState({
+              loading: true,
+              locations: result.locations
+            });
+          }
+        })
+        .catch(error => {
+          // handle error
+          this.setState({
+            loading: true,
+            error
+          });
+        });
+    } else {
+      alert("invalid address");
+    }
+  };
   // if (!props.loaded) return <div>Loading...</div>;
   render() {
     const { error, loading, locations, mapSettings } = this.state;
@@ -42,19 +68,22 @@ export class MapContainer extends Component {
       return <div>Loading</div>;
     } else {
       return (
-        <Map google={this.props.google} className="map" {...mapSettings}>
-          {locations &&
-            locations.map(location => {
-              return (
-                <Marker
-                  key={location.id}
-                  name={location.name}
-                  position={location.position}
-                  // title="Schwules Museum greate place to visit."
-                />
-              );
-            })}
-        </Map>
+        <div>
+          <Map google={this.props.google} className="map" {...mapSettings}>
+            {locations &&
+              locations.map(location => {
+                return (
+                  <Marker
+                    key={location.id}
+                    name={location.name}
+                    position={location.position}
+                    // title="Schwules Museum greate place to visit."
+                  />
+                );
+              })}
+          </Map>
+          <Locations locations={locations} addLocation={this.addLocation} />
+        </div>
       );
     }
   }
